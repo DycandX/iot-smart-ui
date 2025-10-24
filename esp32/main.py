@@ -9,9 +9,9 @@ import random
 from machine import Pin
 
 # -------------- KONFIGURASI --------------
-SSID = "Wifi Sekolah B"           # ganti sesuai WiFi kamu
+SSID = ""           # ganti sesuai WiFi kamu
 PASSWORD = ""                     # isi jika pakai password
-SERVER_URL = "http://172.16.92.223/iot-smart-ui/backend"
+SERVER_URL = "http://172.0.0.0/iot-smart-ui/backend" # ganti sesuai ip kamu
 API_KEY = "APIKEY_SIM_ABC123456789"
 INTERVAL = 5  # detik antar kirim data
 # ----------------------------------------
