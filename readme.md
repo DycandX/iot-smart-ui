@@ -30,7 +30,7 @@ UI menampilkan data suhu, kelembapan, dan tekanan udara dari sensor (dummy atau 
 
 ## 📁 Struktur Folder
 ```
-
+```
 iot-smart-ui/
 │
 ├── backend/ # Server-side PHP API
@@ -243,10 +243,3 @@ Proyek ini dirilis di bawah lisensi **MIT** — silakan gunakan, ubah, dan kemba
 
 ### ⭐ Jangan lupa berikan bintang di repo ini jika bermanfaat!
 
-```
-
----
-
-Apakah kamu mau saya tambahkan **badge versi ESP32 (MicroPython)** + **preview gambar UI** otomatis (seperti GitHub screenshot preview)?
-Kalau iya, kirim satu screenshot UI kamu, nanti saya bantu tambahkan bagian *Preview UI* dengan markdown `<img>` biar README-mu terlihat profesional.
-```
