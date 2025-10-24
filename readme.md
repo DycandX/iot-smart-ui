@@ -1,245 +1,244 @@
-```markdown
-# 🌡️ Smart Home IoT UI — ESP32 + PHP + MySQL
+## 🌡️ Smart IoT ESP32 Web Dashboard (DHT + LED Control + Pressure)
 
-![IoT Project](https://img.shields.io/badge/IoT-ESP32-blue?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
-![Status](https://img.shields.io/badge/status-Working-success?style=flat-square)
+### 🧩 Deskripsi
 
-Proyek ini adalah **Smart Home Web UI** yang terhubung ke **ESP32 (MicroPython)** melalui **backend PHP & MySQL**.  
-UI menampilkan data suhu, kelembapan, dan tekanan udara dari sensor (dummy atau real), serta menyediakan **4 tombol switch** untuk mengontrol perangkat.
+Proyek ini adalah **sistem IoT berbasis ESP32 dan Web Dashboard** yang digunakan untuk:
 
-- 🔹 **Switch 1** → menyalakan/mematikan LED di ESP32
-- 🔹 **Switch 2–4** → dummy (tombol simulasi dengan efek hover)
-- 🔹 Data sensor dikirim dari ESP32 → PHP (API backend) → tampil otomatis di UI
-- 🔹 Data diperbarui setiap 5 detik secara otomatis
+* Mengirim data sensor suhu, kelembapan, tekanan udara, dan level baterai dari **ESP32** ke **server lokal (XAMPP)**.
+* Menampilkan data sensor secara **real-time di halaman web GUI** dengan tampilan mirip LCD.
+* Mengontrol **LED pada ESP32** melalui tombol **Switch 1** di web.
+* Menyediakan tombol tambahan (Switch 2–4) sebagai dummy dengan efek interaktif dan hover.
 
 ---
 
-## 🧩 Fitur Utama
+## ⚙️ Fitur Utama
 
-| Fitur                | Deskripsi                                            |
-| -------------------- | ---------------------------------------------------- |
-| 🌡️ Monitoring Sensor | Menampilkan suhu, kelembapan, dan tekanan dari ESP32 |
-| 💡 Kontrol LED       | Switch 1 mengontrol LED di ESP32 via API             |
-| 🖥️ Realtime UI       | Data diperbarui otomatis setiap 5 detik              |
-| 🧰 Backend PHP       | API `upload.php`, `api.php`, dan `controls.php`      |
-| 🧠 Database MySQL    | Menyimpan data sensor dan perintah kontrol           |
-| 🪶 Frontend Modern   | Desain responsif dengan TailwindCSS                  |
+✅ Tampilan web modern berbasis **Tailwind CSS** (mirip UI Smart Home).
+✅ ESP32 mengirim data dalam **format JSON** ke backend PHP.
+✅ Tombol Switch 1 di web mengirim perintah **ON/OFF ke LED ESP32** melalui endpoint `controls.php`.
+✅ Menyimpan semua data ke database MySQL (`iot-smart-ui`).
+✅ Mendukung data tekanan udara (outdoor pressure).
+✅ Respon cepat dan ringan (komunikasi berbasis HTTP + JSON).
 
 ---
 
-## 📁 Struktur Folder
-```
+## 🧱 Struktur Proyek
+
 ```
 iot-smart-ui/
+├── backend/
+│   ├── upload.php         → Menerima data JSON dari ESP32
+│   ├── controls.php       → Menerima perintah dari web (LED ON/OFF)
+│   ├── api.php            → Endpoint untuk menampilkan data terbaru
+│   ├── db.php             → Koneksi database
+│   └── iot-smart-ui.sql   → Struktur database lengkap
 │
-├── backend/ # Server-side PHP API
-│ ├── db.php # Koneksi MySQL
-│ ├── upload.php # Endpoint kirim data sensor
-│ ├── api.php # Endpoint ambil data sensor & command
-│ ├── controls.php # Endpoint kirim perintah kontrol (LED)
-│ └── create_dht.sql # Skrip SQL database
-│
-├── web/ # Frontend UI
-│ ├── index.html # Tampilan utama
-│ ├── app.js # Logika UI & komunikasi API
-│ └── style.css # Styling kustom
+├── web/
+│   ├── index.html         → Tampilan utama dashboard
+│   ├── app.js             → Logika fetch data + kontrol tombol
+│   └── style.css          → Styling UI
 │
 └── esp32/
-└── main.py # Kode MicroPython ESP32
-
+    └── main.py            → Script MicroPython (Thonny)
 ```
 
 ---
 
-## ⚙️ Kebutuhan Sistem
+## 🧩 Kebutuhan Sistem
 
-- 🧠 **ESP32** (MicroPython Firmware)
-- 💻 **XAMPP / Laragon / WAMP** (Apache + MySQL)
-- 🧮 **PHP 7+** dengan ekstensi `mysqli`
-- 🧰 **Thonny** (atau rshell / ampy untuk upload kode)
-- 🌐 Koneksi Wi-Fi (ESP32 dan PC di jaringan sama)
-- 🧱 **Browser modern** (Chrome/Edge/Firefox)
+### 💻 Server (Backend)
 
----
+* **XAMPP / Laragon**
+* **PHP ≥ 7.4**
+* **MySQL / MariaDB**
 
-## 🧾 Instalasi & Konfigurasi
+### 🔌 Perangkat IoT
 
-### 1️⃣ Import Database
-
-1. Buka `phpMyAdmin`
-2. Buat database baru: `DHT`
-3. Import file:
-```
-
-backend/create_dht.sql
-
-```
-4. Pastikan tabel `devices`, `sensor_data`, `controls` terbuat otomatis
-dan terdapat 1 data device dengan:
-```
-
-api_key = APIKEY_SIM_ABC123456789
-
-```
+* **ESP32** dengan **MicroPython**
+* **Thonny IDE** untuk upload `main.py`
+* Modul sensor DHT22 (opsional, atau pakai data dummy)
 
 ---
 
-### 2️⃣ Setup Backend (PHP + MySQL)
+## 🗂️ Langkah Instalasi Lengkap
 
-1. Salin folder `backend/` ke direktori server (contoh XAMPP):
+### 1️⃣ Clone atau Download Repository
+
+```bash
+git clone https://github.com/username/iot-smart-ui.git
 ```
 
-C:\xampp\htdocs\iot-smart-ui\backend
+Lalu pindahkan folder ke:
 
-````
-2. Ubah kredensial database di `backend/db.php`:
+```
+C:\xampp\htdocs\iot-smart-ui
+```
+
+---
+
+### 2️⃣ Import Database
+
+1. Buka **phpMyAdmin**
+2. Klik **Import**
+3. Pilih file `iot-smart-ui.sql` dari folder `backend/`
+4. Klik **Go**
+
+Database akan otomatis berisi tabel:
+
+* `devices`
+* `sensor_data`
+* `commands`
+
+---
+
+### 3️⃣ Konfigurasi File `db.php`
+
+Pastikan pengaturan sesuai:
+
 ```php
+<?php
 $host = "localhost";
 $user = "root";
 $pass = "";
-$dbname = "DHT";
-````
-
-3. Jalankan Apache & MySQL
-4. Tes endpoint:
-
-   ```
-   http://localhost/iot-smart-ui/backend/api.php?action=latest&device_id=1
-   ```
-
----
-
-### 3️⃣ Setup Frontend
-
-1. Salin folder `web/` ke direktori publik:
-
-   ```
-   C:\xampp\htdocs\iot-smart-ui\web
-   ```
-
-2. Buka `web/app.js`, ubah konfigurasi berikut bila perlu:
-
-   ```js
-   const BASE_URL = "http://localhost/iot-smart-ui/backend";
-   const API_KEY = "APIKEY_SIM_ABC123456789";
-   ```
-
-3. Buka browser dan akses:
-
-   ```
-   http://localhost/iot-smart-ui/web/index.html
-   ```
-
----
-
-### 4️⃣ Setup ESP32 (MicroPython)
-
-1. Buka **Thonny IDE**
-2. Upload file `esp32/main.py` ke board ESP32
-3. Edit isi file agar sesuai Wi-Fi dan server lokal kamu:
-
-   ```python
-   SSID = "NamaWiFi"
-   PASSWORD = "PasswordWiFi"
-   SERVER = "http://192.168.1.100/iot-smart-ui/backend"  # IP PC kamu
-   API_KEY = "APIKEY_SIM_ABC123456789"
-   ```
-
-4. Jalankan atau reboot ESP32
-   ESP akan menampilkan log:
-
-   ```
-   Connecting to WiFi...
-   Connected. IP: 192.168.x.x
-   Sent: {temperature, humidity, pressure, battery}
-   ```
-
----
-
-## 💡 Cara Penggunaan
-
-1. Jalankan Apache + MySQL
-2. Jalankan ESP32 (Wi-Fi tersambung ke jaringan sama)
-3. Buka `index.html` di browser
-4. Lihat data sensor realtime
-5. Tekan **Switch 1** → LED di ESP menyala/mati
-6. Tekan **Switch 2–4** → hanya simulasi UI (dummy toggle dengan efek hover)
-
----
-
-## 🔍 API Endpoint Summary
-
-| Endpoint                                     | Method | Deskripsi                         |
-| -------------------------------------------- | ------ | --------------------------------- |
-| `/upload.php`                                | `POST` | ESP mengirim data sensor          |
-| `/api.php?action=latest&device_id=1`         | `GET`  | Web ambil data terbaru            |
-| `/controls.php`                              | `POST` | Web kirim perintah LED ke backend |
-| `/api.php?action=latest_command&device_id=1` | `GET`  | ESP membaca perintah terbaru      |
-
----
-
-## 🧮 Contoh CURL Test
-
-```bash
-# Kirim data sensor manual
-curl -X POST http://localhost/iot-smart-ui/backend/upload.php \
--H "Content-Type: application/json" \
--d '{"api_key":"APIKEY_SIM_ABC123456789","temperature":30.5,"humidity":65.2,"pressure":1009.2,"battery":90}'
-
-# Ambil data terakhir
-curl http://localhost/iot-smart-ui/backend/api.php?action=latest&device_id=1
-
-# Kirim perintah LED
-curl -X POST http://localhost/iot-smart-ui/backend/controls.php \
--H "Content-Type: application/json" \
--d '{"api_key":"APIKEY_SIM_ABC123456789","command":"led","value":"on"}'
+$db   = "iot-smart-ui";
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>
 ```
 
 ---
 
-## 🔧 Troubleshooting
+### 4️⃣ Jalankan Web Dashboard
 
-| Masalah                     | Penyebab                  | Solusi                                        |
-| --------------------------- | ------------------------- | --------------------------------------------- |
-| ❌ `404 Not Found`          | URL salah                 | Pastikan `BASE_URL` dan path di ESP benar     |
-| ❌ Data tidak muncul di web | Tidak ada data di DB      | Cek `sensor_data` di phpMyAdmin               |
-| ⚠️ LED tidak menyala        | ESP tidak polling command | Cek koneksi Wi-Fi & endpoint `latest_command` |
-| ⚙️ CORS Error               | Akses beda domain         | Tambahkan header CORS di file PHP             |
-| ⚡ Timeout                  | Wi-Fi tidak stabil        | Gunakan IP statis dan router yang sama        |
+Buka di browser:
+
+```
+http://localhost/iot-smart-ui/web/
+```
 
 ---
 
-## 🧰 Tools yang Digunakan
+### 5️⃣ Upload `main.py` ke ESP32
 
-- 🪶 **Tailwind CSS** – styling modern responsif
-- 💾 **PHP & MySQL** – backend dan penyimpanan data
-- 🌐 **Fetch API (JS)** – komunikasi frontend-backend
-- ⚙️ **MicroPython (ESP32)** – pengirim data sensor
-- 🔌 **Thonny IDE** – upload & monitoring log
+Gunakan **Thonny IDE**, lalu upload script `main.py` berikut:
+
+```python
+# main.py - ESP32 (MicroPython) untuk kirim data JSON & kontrol LED
+
+import network, urequests as requests, utime, random, json
+from machine import Pin
+
+SSID = "WiFi_Kamu"
+PASSWORD = ""
+SERVER = "http://192.168.1.10/iot-smart-ui/backend"
+API_KEY = "APIKEY_SIM_ABC123456789"
+INTERVAL = 5  # detik
+
+led = Pin(2, Pin.OUT)
+led.off()
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    if not wlan.isconnected():
+        print("Connecting to WiFi...")
+        wlan.connect(SSID, PASSWORD)
+        for _ in range(15):
+            if wlan.isconnected():
+                break
+            utime.sleep(1)
+    print("Connected:", wlan.ifconfig())
+    return wlan
+
+connect_wifi()
+
+while True:
+    # Data dummy
+    temp = round(random.uniform(25, 40), 1)
+    hum = round(random.uniform(40, 90), 1)
+    pres = round(random.uniform(1000, 1020), 1)
+    bat = random.randint(80, 100)
+
+    payload = {
+        "api_key": API_KEY,
+        "temperature": temp,
+        "humidity": hum,
+        "pressure": pres,
+        "battery": bat
+    }
+
+    try:
+        r = requests.post(f"{SERVER}/upload.php", headers={"Content-Type": "application/json"}, data=json.dumps(payload))
+        print("Sent:", payload, "->", r.status_code, r.text)
+        r.close()
+    except Exception as e:
+        print("Error sending:", e)
+
+    # Cek command dari server
+    try:
+        res = requests.get(f"{SERVER}/api.php?action=latest_command&api_key={API_KEY}")
+        cmd_data = res.json()
+        if cmd_data["status"] == "ok" and cmd_data["command"] == "led":
+            if cmd_data["value"] == "on":
+                led.on()
+            else:
+                led.off()
+        res.close()
+    except Exception as e:
+        print("Command check failed:", e)
+
+    utime.sleep(INTERVAL)
+```
 
 ---
 
-## 📸 Tampilan UI
+## 🌐 API Endpoint Utama
 
-<img src="https://github.com/yourusername/iot-smart-ui/assets/demo_ui.png" alt="Smart Home UI" width="400">
-
----
-
-## 🧑‍💻 Kontributor
-
-| Nama        | Peran                      |
-| ----------- | -------------------------- |
-| 👤 Zulvikar | Developer & Designer UI    |
-| 🤖 ChatGPT  | Assistant Technical Writer |
+| Endpoint                                             | Method      | Fungsi                        |
+| ---------------------------------------------------- | ----------- | ----------------------------- |
+| `/backend/upload.php`                                | POST (JSON) | ESP32 kirim data sensor       |
+| `/backend/api.php?action=latest&device_id=1`         | GET         | Ambil data sensor terbaru     |
+| `/backend/api.php?action=latest_command&api_key=...` | GET         | ESP32 ambil perintah LED      |
+| `/backend/controls.php`                              | POST (JSON) | Web kirim perintah LED ON/OFF |
 
 ---
 
-## 📄 Lisensi
+## 💡 Tampilan GUI
 
-Proyek ini dirilis di bawah lisensi **MIT** — silakan gunakan, ubah, dan kembangkan untuk proyek IoT kamu sendiri.
+Tampilan web berbasis Tailwind CSS dengan gaya **abu-abu LCD-style**:
+
+* Bagian atas: suhu, kelembapan, dan tekanan udara
+* Bagian bawah: kontrol 4 tombol switch (1 LED nyata + 3 dummy)
+* Responsif untuk perangkat mobile
 
 ---
 
-### ⭐ Jangan lupa berikan bintang di repo ini jika bermanfaat!
+## ⚡ Pengujian
 
+### Kirim Data Manual
+
+```bash
+curl -X POST http://localhost/iot-smart-ui/backend/upload.php \
+  -H "Content-Type: application/json" \
+  -d '{"api_key":"APIKEY_SIM_ABC123456789","temperature":30.5,"humidity":55.2,"pressure":1010.3,"battery":95}'
+```
+
+### Kirim Perintah LED ON
+
+```bash
+curl -X POST http://localhost/iot-smart-ui/backend/controls.php \
+  -H "Content-Type: application/json" \
+  -d '{"api_key":"APIKEY_SIM_ABC123456789","command":"led","value":"on"}'
+```
+
+---
+
+## 🧠 Pengembang
+
+**👤 Zulvikar**
+💼 D4 Teknologi Rekayasa Komputer | Politeknik Negeri Semarang
+💡 Proyek ini dibuat untuk demonstrasi sistem IoT berbasis ESP32 dan Web Dashboard.
+
+---
